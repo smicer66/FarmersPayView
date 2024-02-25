@@ -163,7 +163,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Add A Farm</h1>
+            <h1>Update A Farm</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -184,7 +184,7 @@
             <!-- jquery validation -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">New Farm - <small>Add a new farm to your list of farms</small></h3>
+                <h3 class="card-title">Update A Farm - <small>Update your farm</small></h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -192,18 +192,18 @@
                 <div class="card-body">
                   <div class="form-group">
                     <label for="farmName">Name of farm</label>
-                    <input type="text" name="farmName" class="form-control" id="farmName" placeholder="Enter Name of your farm">
+                    <input type="text" name="farmName" class="form-control" value="{{$farmDetails['farmName']}}" id="farmName" placeholder="Enter Name of your farm">
                   </div>
                   <div class="form-group">
                     <label for="farmAddress">Address of farm</label>
-                    <input type="text" name="farmAddress" class="form-control" id="farmAddress" placeholder="Enter Address of Farm">
+                    <input type="text" name="farmAddress" class="form-control" value="{{$farmDetails['farmAddress']}}" id="farmAddress" placeholder="Enter Address of Farm">
                   </div>
                   <div class="form-group">
                     <label for="province">Location of farm (Province)</label>
 					<select name="province" class="form-control" id="province">
 						<option value>-- Select A Province --</option>
 						@foreach($provinceList as $province)
-						<option value="{{$province->id}}">{{$province->provinceName}}</option>
+						<option value="{{$province->id}}" {{$province->id==$farmDetails['farmProvinceId'] ? 'selected' : ''}}>{{$province->provinceName}}</option>
 						@endforeach
 					</select>
                   </div>
@@ -274,7 +274,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <!-- Page specific script -->
 <script>
-
+var list = [];
 $(document).ready(function() {
 	toastr.options = {
 		'closeButton': true,
@@ -292,38 +292,52 @@ $(document).ready(function() {
 		'showMethod': 'fadeIn',
 		'hideMethod': 'fadeOut',
 	}
+	
+	@foreach($districtList as $district)
+		list['{{$district->id}}'] = '{{$district->provinceId}}|||{{$district->id}}|||{{$district->districtName}}';
+	@endforeach
+	
+	
+	
+	var selectedProvince = {{$farmDetails['farmProvinceId']}};
+	handleFilterList(selectedProvince);
+	$('#district').val({{$farmDetails['farmDistrictId']}});
 });
 
+
+
+function handleFilterList(selectedProvince)
+{
+	var filteredList = list.filter(function(value, key) {
+		console.log(value);
+		//console.log(key);
+		var arr = value.split("|||");
+		console.log(arr);
+		return arr[0]==selectedProvince;
+	});
+	console.log(filteredList);
+	
+	$('#district').empty();
+	$('<option>').val(null).text("-- Select A District --").appendTo('#district');
+	$.each(filteredList, function( index, value ) {
+		console.log(value);
+		var valSplit = value.split("|||");
+		$('<option>').val(valSplit[1]).text(valSplit[2]).appendTo('#district');
+	});
+}
 
 $(function () {
 	
 	
-	var list = [];
-	@foreach($districtList as $district)
-		list['{{$district->id}}'] = '{{$district->provinceId}}|||{{$district->id}}|||{{$district->districtName}}';
-	@endforeach
+	
+	
 	
 	//console.log(list);
 						
 	$('#province').change(function(){
 		console.log($(this).val());
 		var selectedProvince = $(this).val();
-		var filteredList = list.filter(function(value, key) {
-			console.log(value);
-			//console.log(key);
-			var arr = value.split("|||");
-			console.log(arr);
-			return arr[0]==selectedProvince;
-		});
-		console.log(filteredList);
-		
-		$('#district').empty();
-		$('<option>').val(null).text("-- Select A District --").appendTo('#district');
-		$.each(filteredList, function( index, value ) {
-			console.log(value);
-			var valSplit = value.split("|||");
-			$('<option>').val(valSplit[1]).text(valSplit[2]).appendTo('#district');
-		});
+		handleFilterList(selectedProvince);
 		
 	});
 	
@@ -337,12 +351,13 @@ $(function () {
 		  farmAddress: $("#farmAddress").val(),
 		  farmDistrictId: $("#district").val(),
 		  farmProvinceId: $("#province").val(),
+		  farmId: $("#farmId").val(),
 		  _token: "{{ csrf_token() }}",
 		};
 
 		$.ajax({
 		  type: "POST",
-		  url: "/add-farm",
+		  url: "/save-farm/{{$farmDetails['id']}}",
 		  data: formData,
 		  dataType: "json",
 		  encode: true,

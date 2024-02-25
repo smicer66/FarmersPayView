@@ -3,12 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Validation Form</title>
+  <title>AdminLTE 3 | DataTables</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
 </head>
@@ -153,7 +157,7 @@
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  @include('partials.navigation_bar_farmer')
+  @include('partials.navigation_bar_administrator')
   
   
   <!-- Content Wrapper. Contains page content -->
@@ -163,12 +167,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Add A Farm</h1>
+            <h1>All Users</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Validation</li>
+              <li class="breadcrumb-item active">DataTables</li>
             </ol>
           </div>
         </div>
@@ -179,65 +183,49 @@
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-          <!-- left column -->
-          <div class="col-md-6 col-lg-6 col-sm-12">
-            <!-- jquery validation -->
-            <div class="card card-primary">
+          <div class="col-12">
+
+            <div class="card">
               <div class="card-header">
-                <h3 class="card-title">New Farm - <small>Add a new farm to your list of farms</small></h3>
+                <div class="float-left"><h3 class="card-title">All Users</h3></div>
+				<div class="float-right"><a href="/administrator/user/new-user-type" class="btn btn-primary">Create New Administrator</a></div>
               </div>
               <!-- /.card-header -->
-              <!-- form start -->
-              <form id="quickForm">
-                <div class="card-body">
-                  <div class="form-group">
-                    <label for="farmName">Name of farm</label>
-                    <input type="text" name="farmName" class="form-control" id="farmName" placeholder="Enter Name of your farm">
-                  </div>
-                  <div class="form-group">
-                    <label for="farmAddress">Address of farm</label>
-                    <input type="text" name="farmAddress" class="form-control" id="farmAddress" placeholder="Enter Address of Farm">
-                  </div>
-                  <div class="form-group">
-                    <label for="province">Location of farm (Province)</label>
-					<select name="province" class="form-control" id="province">
-						<option value>-- Select A Province --</option>
-						@foreach($provinceList as $province)
-						<option value="{{$province->id}}">{{$province->provinceName}}</option>
-						@endforeach
-					</select>
-                  </div>
-                  <div class="form-group">
-                    <label for="district">District Located</label>
-                    <!--<input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">-->
-					<select name="district" class="form-control" id="district">
-						<option value>-- Select A District --</option>
-					</select>
-                  </div>
-                  <!--<div class="form-group mb-0">
-                    <div class="custom-control custom-checkbox">
-                      <input type="checkbox" name="terms" class="custom-control-input" id="exampleCheck1">
-                      <label class="custom-control-label" for="exampleCheck1">I agree to the <a href="#">terms of service</a>.</label>
-                    </div>
-                  </div>-->
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Proceed <i class="fa fa-arrow-right"></i></button>
-                </div>
-              </form>
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th>Full Name</th>
+                    <th>Mobile Number</th>
+                    <th>User Role</th>
+                    <th>Date of Birth</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                  <tfoot>
+                  <tr>
+                    <th>Full Name</th>
+                    <th>Mobile Number</th>
+                    <th>User Role</th>
+                    <th>Date of Birth</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- /.card-body -->
             </div>
             <!-- /.card -->
-            </div>
-          <!--/.col (left) -->
-          <!-- right column -->
-          <div class="col-md-6">
-
           </div>
-          <!--/.col (right) -->
+          <!-- /.col -->
         </div>
         <!-- /.row -->
-      </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
   </div>
@@ -261,152 +249,56 @@
 <script src="../../plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- jquery-validation -->
-<script src="../../plugins/jquery-validation/jquery.validate.min.js"></script>
-<script src="../../plugins/jquery-validation/additional-methods.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="../../plugins/jszip/jszip.min.js"></script>
+<script src="../../plugins/pdfmake/pdfmake.min.js"></script>
+<script src="../../plugins/pdfmake/vfs_fonts.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="../../dist/js/demo.js"></script>
-
-<!-- Tastr dependencies -->
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <!-- Page specific script -->
 <script>
-
-$(document).ready(function() {
-	toastr.options = {
-		'closeButton': true,
-		'debug': false,
-		'newestOnTop': false,
-		'progressBar': false,
-		'positionClass': 'toast-top-right',
-		'preventDuplicates': false,
-		'showDuration': '1000',
-		'hideDuration': '1000',
-		'timeOut': '5000',
-		'extendedTimeOut': '1000',
-		'showEasing': 'swing',
-		'hideEasing': 'linear',
-		'showMethod': 'fadeIn',
-		'hideMethod': 'fadeOut',
-	}
-});
-
-
-$(function () {
-	
-	
-	var list = [];
-	@foreach($districtList as $district)
-		list['{{$district->id}}'] = '{{$district->provinceId}}|||{{$district->id}}|||{{$district->districtName}}';
-	@endforeach
-	
-	//console.log(list);
-						
-	$('#province').change(function(){
-		console.log($(this).val());
-		var selectedProvince = $(this).val();
-		var filteredList = list.filter(function(value, key) {
-			console.log(value);
-			//console.log(key);
-			var arr = value.split("|||");
-			console.log(arr);
-			return arr[0]==selectedProvince;
-		});
-		console.log(filteredList);
-		
-		$('#district').empty();
-		$('<option>').val(null).text("-- Select A District --").appendTo('#district');
-		$.each(filteredList, function( index, value ) {
-			console.log(value);
-			var valSplit = value.split("|||");
-			$('<option>').val(valSplit[1]).text(valSplit[2]).appendTo('#district');
-		});
-		
-	});
+  $(function () {
+	  
+	var url = '/list-user-types-api';
+    $("#example1").DataTable({
+		"ajax": url,
+		/*"beforeSend": function (xhr) {
+			xhr.setRequestHeader('Authorization',
+				"Bearer " + '{{\Auth::user()->token}}');
+		},*/
+		"responsive": true, 
+		"autoWidth": false,
+		"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+		"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+		"dom": '<"top"Bf>rt<"bottom"lip><"clear">',
+		"paging": true,
+		"lengthChange": true,
+		"searching": true,
+		"ordering": true,
+		"serverSide": true,
+		"processing": true,
+		"columns": [
+			{ data: 'userType' },
+			{ data: 'createdByFullName' },
+			{ data: 'link' }
+		],
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    
 	
 	
 	
-  $.validator.setDefaults({
-    submitHandler: function () {
-      //alert( "Form successful submitted!" );
-		var formData = {
-		  farmName: $("#farmName").val(),
-		  farmAddress: $("#farmAddress").val(),
-		  farmDistrictId: $("#district").val(),
-		  farmProvinceId: $("#province").val(),
-		  _token: "{{ csrf_token() }}",
-		};
-
-		$.ajax({
-		  type: "POST",
-		  url: "/add-farm",
-		  data: formData,
-		  dataType: "json",
-		  encode: true,
-		}).done(function (data) {
-		  if(data['responseCode']==0)
-		  {
-				$('#quickForm')[0].reset();
-				toastr.success(data['message']);
-				setTimeout(
-					function() 
-					{
-						window.location.href = "/dashboard";
-					}, 5000
-				);
-		  }
-		  else
-		  {
-			  toastr.error(data['message']);
-			  
-		  }
-		  
-		});
-
-		event.preventDefault();
-    }
   });
-  $('#quickForm').validate({
-    rules: {
-      email: {
-        required: true,
-        email: true,
-      },
-      password: {
-        required: true,
-        minlength: 5
-      },
-      terms: {
-        required: true
-      },
-    },
-    messages: {
-      email: {
-        required: "Please enter a email address",
-        email: "Please enter a valid email address"
-      },
-      password: {
-        required: "Please provide a password",
-        minlength: "Your password must be at least 5 characters long"
-      },
-      terms: "Please accept our terms"
-    },
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-      error.addClass('invalid-feedback');
-      element.closest('.form-group').append(error);
-    },
-    highlight: function (element, errorClass, validClass) {
-      $(element).addClass('is-invalid');
-    },
-    unhighlight: function (element, errorClass, validClass) {
-      $(element).removeClass('is-invalid');
-    }
-  });
-});
 </script>
 </body>
 </html>

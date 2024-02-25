@@ -33,8 +33,16 @@ Route::group([
     'middleware' => ['auth']
 ], function () {
     Route::get('/dashboard', 'App\Http\Controllers\UserController@getDashboard');
-    Route::get('/add-farm', 'App\Http\Controllers\UserController@getAddFarm');
-    Route::get('/list-farms', 'App\Http\Controllers\UserController@getListFarms');
+    Route::get('/add-farm', 'App\Http\Controllers\FarmController@getAddFarm');
+    Route::get('/update-farm/{farmId}', 'App\Http\Controllers\FarmController@getUpdateFarm');
+    Route::get('/list-farms', 'App\Http\Controllers\FarmController@index');
+	
+	
+    Route::get('/administrator/user/user-types', 'App\Http\Controllers\UserController@getUserTypes');
+    Route::get('/administrator/user/new-user-type', 'App\Http\Controllers\UserController@getAddNewUserType');
+	
+    Route::get('/administrator/user/all-users', 'App\Http\Controllers\UserController@getAllUsers');
+    Route::get('/administrator/user/new-admin-user', 'App\Http\Controllers\UserController@getAddNewAdminUser');
 	
 });
 
@@ -42,7 +50,12 @@ Route::group([
 Route::group([
     'middleware' => ['api']
 ], function () {
-    Route::get('/list-farms-api', 'App\Http\Controllers\UserController@getListFarmsApi');
+    Route::get('/list-farms-api', 'App\Http\Controllers\FarmController@getListFarmsApi');
     Route::post('/add-farm', 'App\Http\Controllers\FarmController@store');
+    Route::post('/update-farm/{farmId}', 'App\Http\Controllers\FarmController@edit');
+    Route::get('/list-user-types-api', 'App\Http\Controllers\UserController@getListUserTypesApi');
+	
+	
+    Route::post('/add-user-type', 'App\Http\Controllers\UserController@postAddUserType');
 	
 });

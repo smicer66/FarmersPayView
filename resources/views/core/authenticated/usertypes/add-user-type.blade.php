@@ -163,7 +163,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Add A Farm</h1>
+            <h1>Add User Types</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -184,42 +184,33 @@
             <!-- jquery validation -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">New Farm - <small>Add a new farm to your list of farms</small></h3>
+                <h3 class="card-title">New User Type - <small>Add a new Administrator User Type</small></h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
               <form id="quickForm">
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="farmName">Name of farm</label>
-                    <input type="text" name="farmName" class="form-control" id="farmName" placeholder="Enter Name of your farm">
+                    <label for="userType1">Name of UserType</label>
+                    <input type="text" name="userType[]" class="form-control ut" id="userType1" placeholder="Enter Name of your User Type">
                   </div>
                   <div class="form-group">
-                    <label for="farmAddress">Address of farm</label>
-                    <input type="text" name="farmAddress" class="form-control" id="farmAddress" placeholder="Enter Address of Farm">
+                    <label for="userType2">Name of UserType</label>
+                    <input type="text" name="userType[]" class="form-control ut" id="userType2" placeholder="Enter Name of your User Type">
                   </div>
                   <div class="form-group">
-                    <label for="province">Location of farm (Province)</label>
-					<select name="province" class="form-control" id="province">
-						<option value>-- Select A Province --</option>
-						@foreach($provinceList as $province)
-						<option value="{{$province->id}}">{{$province->provinceName}}</option>
-						@endforeach
-					</select>
+                    <label for="userType3">Name of UserType</label>
+                    <input type="text" name="userType[]" class="form-control ut" id="userType3" placeholder="Enter Name of your User Type">
                   </div>
                   <div class="form-group">
-                    <label for="district">District Located</label>
-                    <!--<input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">-->
-					<select name="district" class="form-control" id="district">
-						<option value>-- Select A District --</option>
-					</select>
+                    <label for="userType4">Name of UserType</label>
+                    <input type="text" name="userType[]" class="form-control ut" id="userType4" placeholder="Enter Name of your User Type">
                   </div>
-                  <!--<div class="form-group mb-0">
-                    <div class="custom-control custom-checkbox">
-                      <input type="checkbox" name="terms" class="custom-control-input" id="exampleCheck1">
-                      <label class="custom-control-label" for="exampleCheck1">I agree to the <a href="#">terms of service</a>.</label>
-                    </div>
-                  </div>-->
+                  <div class="form-group">
+                    <label for="userType5">Name of UserType</label>
+                    <input type="text" name="userType[]" class="form-control ut" id="userType5" placeholder="Enter Name of your User Type">
+                  </div>
+                  
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
@@ -298,51 +289,34 @@ $(document).ready(function() {
 $(function () {
 	
 	
-	var list = [];
-	@foreach($districtList as $district)
-		list['{{$district->id}}'] = '{{$district->provinceId}}|||{{$district->id}}|||{{$district->districtName}}';
-	@endforeach
 	
-	//console.log(list);
-						
-	$('#province').change(function(){
-		console.log($(this).val());
-		var selectedProvince = $(this).val();
-		var filteredList = list.filter(function(value, key) {
-			console.log(value);
-			//console.log(key);
-			var arr = value.split("|||");
-			console.log(arr);
-			return arr[0]==selectedProvince;
-		});
-		console.log(filteredList);
-		
-		$('#district').empty();
-		$('<option>').val(null).text("-- Select A District --").appendTo('#district');
-		$.each(filteredList, function( index, value ) {
-			console.log(value);
-			var valSplit = value.split("|||");
-			$('<option>').val(valSplit[1]).text(valSplit[2]).appendTo('#district');
-		});
-		
-	});
 	
 	
 	
   $.validator.setDefaults({
     submitHandler: function () {
-      //alert( "Form successful submitted!" );
+		//alert( "Form successful submitted!" );
+		var values = [];
+		$('input[name^="userType"]').each(function() {
+			if($(this).val().length>0)
+			{
+				values.push($(this).val());
+			}
+		});
+		
+		console.log(values);
+		
+		
 		var formData = {
-		  farmName: $("#farmName").val(),
-		  farmAddress: $("#farmAddress").val(),
-		  farmDistrictId: $("#district").val(),
-		  farmProvinceId: $("#province").val(),
+		  userTypes: values,
 		  _token: "{{ csrf_token() }}",
 		};
+		
+		console.log(formData);
 
 		$.ajax({
 		  type: "POST",
-		  url: "/add-farm",
+		  url: "/add-user-type",
 		  data: formData,
 		  dataType: "json",
 		  encode: true,
@@ -354,7 +328,7 @@ $(function () {
 				setTimeout(
 					function() 
 					{
-						window.location.href = "/dashboard";
+						window.location.href = "/administrator/user/user-types";
 					}, 5000
 				);
 		  }

@@ -112,45 +112,21 @@ class UserController extends Controller
 		return view('core.guest.register');
         
     }
-
-
-    public function getDashboard()
-    {
-
-		return view('core.authenticated.dashboard.farmers_dashboard');
-        
-    }
 	
-	public function getAddFarm()
+	
+	public function getUserTypes()
 	{
-		//dd(\Auth::user());
-		$url = 'http://'.getServiceBaseURL().'/api/v1/utilities/fetch-default-data';
-			
-			
-		$defaultData = sendGetRequest($url, [], 'application/json', null);
-		if($defaultData->status()!=200)
-		{
-			return back()->with('error', 'Error logging in. Please try again later');
-		}
-		$defaultData = $defaultData->json();
-		$defaultData = json_encode($defaultData);
-		$defaultData = json_decode($defaultData);
-		$defaultData = $defaultData->responseData;
-		$districtList = $defaultData->districtList;
-		$provinceList = $defaultData->provinceList;
-		
-		//dd($defaultData);
-		
-		return view('core.authenticated.farmers.add-farm1', compact('provinceList', 'districtList'));
+		return view('core.authenticated.usertypes.list-user-types');
 	}
 	
-	public function getListFarmsApi(Request $request)
+	
+	public function getListUserTypesApi(Request $request)
 	{
 		
 		//dd($request->all());
-		$start = $request->get('start');
+		$start = $request->get('start')/$request->get('length');
 		$length = $request->get('length');
-		$url = 'http://'.getServiceBaseURL().'/api/v1/farms/list-farms/'.$length.'/'.$start;
+		$url = 'http://'.getServiceBaseURL().'/api/v1/user/list-user-types/'.$length.'/'.$start;
 		$all = $request->all();
 			
 		
@@ -164,12 +140,12 @@ class UserController extends Controller
 		$defaultData = $defaultData->json();
 		$defaultData = json_encode($defaultData);
 		$defaultData = json_decode($defaultData);
-		$farmList = $defaultData->responseData->farmList;
+		$userTypeList = $defaultData->responseData->userTypeList;
 		$count = $defaultData->responseData->count;
-		$farms = [];
-		foreach($farmList as $farm)
+		$userTypes = [];
+		foreach($userTypeList as $userType)
 		{
-			$farmEntry = [];
+			$userTypeEntry = [];
 			$link = '<div class="btn-group">
                                     <button class="btn btn-sm btn-danger btn-sm" type="button">Action</button>
                                     <button data-toggle="dropdown" class="btn btn-danger btn-sm dropdown-toggle"
@@ -178,31 +154,69 @@ class UserController extends Controller
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <ul role="menu" class="dropdown-menu">
-                                        <li><a href="/admin/payment/approve-fees/'.$farm->farm->id.'">Remove Farm</a></li>
+                                        <li><a href="/update-permissions/'.$userType->id.'">Assign Permissions</a></li>
                                     </ul>
                                 </div>';
-			$farmEntry['farmName'] = $farm->farm->farmName;
-			$farmEntry['farmAddress'] = $farm->farm->farmAddress."</br>".$farm->districtName.",</br>".$farm->provinceName;
-			$farmEntry['createdAt'] = date('Y, M jS - h:i A', strtotime($farm->farm->createdAt));
-			$farmEntry['farmStatus'] = $farm->farm->farmStatus;
-			$farmEntry['link'] = $link;
-			array_push($farms, $farmEntry);
+			$userTypeEntry['userType'] = $userType->userType;
+			$userTypeEntry['createdByFullName'] = $userType->createdByFullName;
+			$userTypeEntry['link'] = $link;
+			array_push($userTypes, $userTypeEntry);
 		}
 		
 		//dd($defaultData);
 		
 		return [
-			'data'=>$farms,
+			'data'=>$userTypes,
 			'recordsTotal'=>$count[0],
 			'recordsFiltered'=>$count[0],
 			
 		];
 	}
 	
-	public function getListFarms()
+
+	public function getAddNewUserType()
 	{
-		return view('core.authenticated.farmers.list-farms');
+		return view('core.authenticated.usertypes.add-user-type');
 	}
+	
+	
+	public function postAddUserType(Request $request)
+	{
+		$all = $request->get('userTypes');
+		
+		$check = false;
+		$respTrue = null;
+		$respFalse = null;
+		$data = [];
+		
+		$data['userTypes'] = $all;
+		$url = 'http://'.getServiceBaseURL().'/api/v1/user/add-user-type';
+		$authData = sendPostRequestWithToken($url, $data, 'application/json', \Auth::user()->token);
+		
+		
+		if($authData->status()==500)
+		{
+			$js = $authData->json();
+			$js['message'] = $js['error'];
+			return $js;
+		}
+		else if($authData->status()!=200)
+		{
+			return $authData->json();
+		}
+		
+		return $authData->json();
+		
+	}
+
+    public function getDashboard()
+    {
+		if(\Auth::user()->userRole=="ADMINISTRATOR")
+			return view('core.authenticated.dashboard.administrator_dashboard');
+		else
+			return view('core.authenticated.dashboard.farmers_dashboard');
+        
+    }
 	
 	
 

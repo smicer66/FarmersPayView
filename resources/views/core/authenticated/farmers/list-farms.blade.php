@@ -277,7 +277,7 @@
 		"responsive": true, 
 		"autoWidth": false,
 		"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-		"lengthMenu": [[1, 10, 25, 50, 100, -1], [1, 10, 25, 50, 100, "All"]],
+		"lengthMenu": [[10, 25, 50, 100, -1], [1, 10, 25, 50, 100, "All"]],
 		"dom": '<"top"Bf>rt<"bottom"lip><"clear">',
 		"paging": true,
 		"lengthChange": true,
