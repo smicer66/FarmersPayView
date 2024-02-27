@@ -78,7 +78,7 @@ class FarmController extends Controller
 	{
 		
 		//dd($request->all());
-		$start = $request->get('start');
+		$start = $request->get('start')/$request->get('length');
 		$length = $request->get('length');
 		$url = 'http://'.getServiceBaseURL().'/api/v1/farms/list-farms/'.$length.'/'.$start;
 		$all = $request->all();

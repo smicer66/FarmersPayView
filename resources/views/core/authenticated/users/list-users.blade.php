@@ -188,7 +188,7 @@
             <div class="card">
               <div class="card-header">
                 <div class="float-left"><h3 class="card-title">All Users</h3></div>
-				<div class="float-right"><a href="/administrator/user/new-user-type" class="btn btn-primary">Create New Administrator</a></div>
+				<div class="float-right"><a href="/administrator/user/new-admin-user" class="btn btn-primary">Create New Administrator</a></div>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -270,9 +270,43 @@
 <script>
   $(function () {
 	  
-	var url = '/list-user-types-api';
+	var url = '/list-users-api';
     $("#example1").DataTable({
-		"ajax": url,
+		"ajax": {
+			dataType: "JSON",  
+			type: "GET",
+			url: url,
+			data: [],
+			dataSrc: function ( json ) {
+                //Make your callback here.
+				var userStatusList = [];
+				userStatusList['NOT_ACTIVATED'] = 'Not Activated';
+				userStatusList['ACTIVE'] = 'Active';
+				userStatusList['SUSPENDED'] = 'Suspended';
+				userStatusList['DELETED'] = 'Deleted';
+				
+				var dt = json.data;
+				var dt1 = [];
+				$.each(dt, function(index, value) {
+					value.status = userStatusList[value.status];
+					//var date = new Date('yyyy-MM-dd', Date.parse(value.dateOfBirth));
+					var date = new Date(value.dateOfBirth);
+					//console.log(date);
+					value.dateOfBirth =  date.toDateString();
+					dt1.push(value);
+					//console.log(value);
+				});
+                return dt1;
+            },
+			async: true,
+			error: function (xhr, error, code) {
+				console.log(xhr.status, code);
+				if(xhr.status==401)
+				{
+					window.location.href = "/logout";
+				}
+			}
+		},
 		/*"beforeSend": function (xhr) {
 			xhr.setRequestHeader('Authorization',
 				"Bearer " + '{{\Auth::user()->token}}');
@@ -289,13 +323,15 @@
 		"serverSide": true,
 		"processing": true,
 		"columns": [
-			{ data: 'userType' },
-			{ data: 'createdByFullName' },
+			{ data: 'fullName' },
+			{ data: 'mobileNumber' },
+			{ data: 'userRole' },
+			{ data: 'dateOfBirth' },
+			{ data: 'status' },
 			{ data: 'link' }
 		],
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     
-	
 	
 	
   });

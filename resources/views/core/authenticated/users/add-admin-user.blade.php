@@ -163,7 +163,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Add User Types</h1>
+            <h1>Add Admin User</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -184,31 +184,51 @@
             <!-- jquery validation -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">New User Type - <small>Add a new Administrator User Type</small></h3>
+                <h3 class="card-title">New Admin User - <small>Add a new Administrator</small></h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
               <form id="quickForm">
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="userType1">Name of UserType</label>
-                    <input type="text" name="userType[]" class="form-control ut" id="userType1" placeholder="Enter Name of your User Type">
+                    <label for="firstName">First Name</label>
+                    <input type="text" name="firstName" class="form-control ut" value="Samuels" id="firstName" placeholder="Enter Administrators First Name">
                   </div>
                   <div class="form-group">
-                    <label for="userType2">Name of UserType</label>
-                    <input type="text" name="userType[]" class="form-control ut" id="userType2" placeholder="Enter Name of your User Type">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" name="lastName" class="form-control ut" value="Philips" id="lastName" placeholder="Enter Administrators Last Name">
                   </div>
                   <div class="form-group">
-                    <label for="userType3">Name of UserType</label>
-                    <input type="text" name="userType[]" class="form-control ut" id="userType3" placeholder="Enter Name of your User Type">
+                    <label for="otherName">Other Name</label>
+                    <input type="text" name="otherName" class="form-control ut" value="Toma" id="otherName" placeholder="Enter Administrators Other Name">
                   </div>
                   <div class="form-group">
-                    <label for="userType4">Name of UserType</label>
-                    <input type="text" name="userType[]" class="form-control ut" id="userType4" placeholder="Enter Name of your User Type">
+                    <label for="dateOfBirth">Date of Birth</label>
+                    <input type="date" name="dateOfBirth" class="form-control ut" id="dateOfBirth" placeholder="Enter Date of Birth">
                   </div>
                   <div class="form-group">
-                    <label for="userType5">Name of UserType</label>
-                    <input type="text" name="userType[]" class="form-control ut" id="userType5" placeholder="Enter Name of your User Type">
+                    <label for="mobileNumber">Mobile Number</label>
+                    <input type="text" name="mobileNumber" class="form-control ut" value="0803094411" id="mobileNumber" placeholder="Enter Administrators Mobile Number">
+                  </div>
+                  <div class="form-group">
+                    <label for="emailAddress">Email Address</label>
+                    <input type="text" name="emailAddress" class="form-control ut" value="admin5@probase.com" id="emailAddress" placeholder="Enter Administrators Email Address">
+                  </div>
+                  <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select name="gender" class="form-control ut" id="gender" placeholder="Enter Name of your User Type">
+						<option value="FEMALE">Female</option>
+						<option value="Male">Male</option>
+					</select>
+                  </div>
+                  <div class="form-group">
+                    <label for="userType">User Role</label>
+                    <select name="userType" class="form-control ut" required id="userType" placeholder="Enter Name of your User Type">
+						<option value>--Select A User Role---</option>
+						@foreach($userTypes as $userType)
+						<option value="{{$userType->id}}">{{$userType->userType}}</option>
+						@endforeach
+					</select>
                   </div>
                   
                 </div>
@@ -295,28 +315,28 @@ $(function () {
 	
   $.validator.setDefaults({
     submitHandler: function () {
-		//alert( "Form successful submitted!" );
-		var values = [];
-		$('input[name^="userType"]').each(function() {
-			if($(this).val().length>0)
-			{
-				values.push($(this).val());
-			}
-		});
 		
-		console.log(values);
+		console.log(new Date( $('#dateOfBirth').val()));
 		
 		
 		var formData = {
-		  userTypes: values,
+		  firstName: $('#firstName').val(),
+		  lastName: $('#lastName').val(),
+		  otherName: $('#otherName').val(),
+		  mobileNumber: $('#mobileNumber').val(),
+		  emailAddress: $('#emailAddress').val(),
+		  dateOfBirth: $('#dateOfBirth').val(),
+		  gender: $('#gender').val(),
+		  userTypeId: $('#userType').val(),
 		  _token: "{{ csrf_token() }}",
 		};
 		
 		console.log(formData);
+		//alert(44);
 
 		$.ajax({
 		  type: "POST",
-		  url: "/add-user-type",
+		  url: "/add-admin-user-api",
 		  data: formData,
 		  dataType: "json",
 		  encode: true,
@@ -328,7 +348,7 @@ $(function () {
 				setTimeout(
 					function() 
 					{
-						window.location.href = "/administrator/user/user-types";
+						window.location.href = "/administrator/user/all-users";
 					}, 5000
 				);
 		  }
@@ -340,33 +360,68 @@ $(function () {
 		  
 		});
 
+		
 		event.preventDefault();
     }
   });
   $('#quickForm').validate({
     rules: {
-      email: {
+      firstName: {
+        required: true,
+        minlength: 2
+      },
+      lastName: {
+        required: true,
+        minlength: 2
+      },
+      dateOfBirth: {
+        required: true,
+		//date: true
+      },
+      mobileNumber: {
+        required: true,
+        minlength: 10,
+		digits: true
+      },
+      emailAddress: {
         required: true,
         email: true,
       },
-      password: {
+      gender: {
         required: true,
-        minlength: 5
       },
-      terms: {
-        required: true
+      userType: {
+        required: true,
       },
     },
     messages: {
-      email: {
-        required: "Please enter a email address",
-        email: "Please enter a valid email address"
+      firstName: {
+        required: "Please enter the first name",
+        minlength: "Please provide the first name"
       },
-      password: {
-        required: "Please provide a password",
-        minlength: "Your password must be at least 5 characters long"
+      lastName: {
+        required: "Please provide the last name",
+        minlength: "Please provide the last name"
       },
-      terms: "Please accept our terms"
+      dateOfBirth: {
+        required: "Please enter the date of birth",
+        date: "Date of birth must be in a date format"
+      },
+      mobileNumber: {
+        required: "Please provide the mobile number",
+        minlength: "Please provide the mobile number",
+        digits: "Please provide the valid mobile number"
+      },
+      emailAddress: {
+        required: "Please enter the administrators email address",
+        email: "Please provide a valid email address"
+      },
+      gender: {
+        required: "Please specify the administrators gender",
+      },
+      userType: {
+        required: "Please specify the role of this administrator"
+      },
     },
     errorElement: 'span',
     errorPlacement: function (error, element) {
@@ -381,6 +436,7 @@ $(function () {
     }
   });
 });
+
 </script>
 </body>
 </html>

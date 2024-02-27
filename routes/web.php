@@ -43,6 +43,7 @@ Route::group([
 	
     Route::get('/administrator/user/all-users', 'App\Http\Controllers\UserController@getAllUsers');
     Route::get('/administrator/user/new-admin-user', 'App\Http\Controllers\UserController@getAddNewAdminUser');
+	Route::get('/administrator/update-user-status/{status}/{userId}', 'App\Http\Controllers\UserController@getUpdateUserStatus');
 	
 });
 
@@ -55,7 +56,12 @@ Route::group([
     Route::post('/update-farm/{farmId}', 'App\Http\Controllers\FarmController@edit');
     Route::get('/list-user-types-api', 'App\Http\Controllers\UserController@getListUserTypesApi');
 	
+    Route::get('/list-users-api', 'App\Http\Controllers\UserController@getListUsersApi');
+	
+	
 	
     Route::post('/add-user-type', 'App\Http\Controllers\UserController@postAddUserType');
+    Route::post('/add-admin-user-api', 'App\Http\Controllers\UserController@postAddAdminUserApi');
+	
 	
 });

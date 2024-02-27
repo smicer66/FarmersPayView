@@ -147,15 +147,9 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="../charts/chartjs.html" class="nav-link">
+                <a href="/administrator/user/all-users" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>All Users</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../charts/flot.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>New Administrator</p>
                 </a>
               </li>
               <li class="nav-item">

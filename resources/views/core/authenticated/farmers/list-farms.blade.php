@@ -157,7 +157,11 @@
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  @include('partials.navigation_bar_farmer')
+	@if(\Auth::user()->userRole=='FARMER')
+		@include('partials.navigation_bar_farmer')
+	@elseif(\Auth::user()->userRole=='ADMINISTRATOR')
+		@include('partials.navigation_bar_administrator')
+	@endif
   
   
   <!-- Content Wrapper. Contains page content -->
