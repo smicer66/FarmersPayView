@@ -1,9 +1,9 @@
 
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="../../index3.html" class="brand-link">
-      <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">AdminLTE 3</span>
+    <a href="/index3.html" class="brand-link">
+      <img src="/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span class="brand-text font-weight-light">FarmersPAY</span>
     </a>
 
     <!-- Sidebar -->
@@ -11,10 +11,10 @@
       <!-- Sidebar user (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block">{{\Auth::user()->firstName}} {{\Auth::user()->lastName}}</a>
         </div>
       </div>
 
@@ -50,7 +50,7 @@
               <p>
                 Farms
                 <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">6</span>
+                
               </p>
             </a>
             <ul class="nav nav-treeview">
@@ -72,38 +72,15 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="../charts/chartjs.html" class="nav-link">
+                <a href="/administrator/payment-schedule/new-payment-schedule" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Schedule A Payment</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="../charts/flot.html" class="nav-link">
+                <a href="/administrator/payment-schedule/payment-schedules" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Payments Paid Out</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-		  <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-chart-pie"></i>
-              <p>
-                Reports
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="../charts/chartjs.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Payment Reports</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../charts/flot.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Farm Reports</p>
+                  <p>Scheduled Payments</p>
                 </a>
               </li>
             </ul>
@@ -118,25 +95,27 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="../charts/chartjs.html" class="nav-link">
+                <a href="/administrator/workflow/my-items" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>My Workflow Items</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="../charts/flot.html" class="nav-link">
+                <a href="/administrator/workflow/history" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Workflow History</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="../charts/flot.html" class="nav-link">
+                <a href="/administrator/workflow/view-users" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Workflow Settings</p>
                 </a>
               </li>
             </ul>
           </li>
+		  
+		  <li class="nav-header">User Management</li>
 		  <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-chart-pie"></i>
@@ -156,6 +135,31 @@
                 <a href="/administrator/user/user-types" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>User Types</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+		  
+          <li class="nav-header">REPORTING</li>
+		  <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+                Reports
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="../charts/chartjs.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Payment Reports</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="../charts/flot.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Farm Reports</p>
                 </a>
               </li>
             </ul>

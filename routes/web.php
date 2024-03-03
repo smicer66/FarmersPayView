@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/home', function () {
+    return view('core.guest.login');
+});
 
 Route::get('login', [ 'as' => 'login', 'uses' => 'App\Http\Controllers\Auth\AuthController@getLogin']);
 Route::post('login', [ 'as' => 'login', 'uses' => 'App\Http\Controllers\Auth\AuthController@postLogin']);
@@ -45,6 +48,16 @@ Route::group([
     Route::get('/administrator/user/new-admin-user', 'App\Http\Controllers\UserController@getAddNewAdminUser');
 	Route::get('/administrator/update-user-status/{status}/{userId}', 'App\Http\Controllers\UserController@getUpdateUserStatus');
 	
+	Route::get('/administrator/workflow/my-items', 'App\Http\Controllers\WorkflowController@getMyItems');
+	Route::get('/administrator/workflow/history', 'App\Http\Controllers\WorkflowController@getItemsHistory');
+	Route::get('/administrator/workflow/settings', 'App\Http\Controllers\WorkflowController@getSettings');
+	Route::get('/administrator/workflow/view-users', 'App\Http\Controllers\WorkflowController@getWorkflowUsers');
+	
+	
+	Route::get('/administrator/payment-schedule/new-payment-schedule', 'App\Http\Controllers\PaymentScheduleController@create');
+	Route::get('/administrator/payment-schedule/payment-schedules', 'App\Http\Controllers\PaymentScheduleController@index');
+	Route::get('/administrator/payment-schedule/payment-schedule-breakdown/{id}/{scheduleName}', 'App\Http\Controllers\PaymentScheduleController@getPaymentScheduleBreakdown');
+	
 });
 
 
@@ -62,6 +75,12 @@ Route::group([
 	
     Route::post('/add-user-type', 'App\Http\Controllers\UserController@postAddUserType');
     Route::post('/add-admin-user-api', 'App\Http\Controllers\UserController@postAddAdminUserApi');
+	
+    Route::get('/list-workflow-users-api', 'App\Http\Controllers\WorkflowController@getWorkflowUsersApi');
+    Route::post('/create-new-workflow-api', 'App\Http\Controllers\WorkflowController@createNewWorkflowApi');
+    Route::post('/create-new-payment-schedule-api', 'App\Http\Controllers\PaymentScheduleController@createNewPaymentScheduleApi');
+    Route::get('/list-payment-schedule-api', 'App\Http\Controllers\PaymentScheduleController@getPaymentScheduleApi');
+    Route::get('/list-payment-schedule-breakdown-api/{id}', 'App\Http\Controllers\PaymentScheduleController@getPaymentScheduleBreakdownApi');
 	
 	
 });

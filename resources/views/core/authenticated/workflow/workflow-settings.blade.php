@@ -153,7 +153,7 @@
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  @include('partials.navigation_bar_farmer')
+  @include('partials.navigation_bar_administrator')
   
   
   <!-- Content Wrapper. Contains page content -->
@@ -163,7 +163,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Add Admin User</h1>
+            <h1>Workflow Settings</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -180,61 +180,72 @@
       <div class="container-fluid">
         <div class="row">
           <!-- left column -->
-          <div class="col-md-6 col-lg-6 col-sm-12">
+          <div class="col-md-12 col-lg-12 col-sm-12">
             <!-- jquery validation -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">New Admin User - <small>Add a new Administrator</small></h3>
+                <h3 class="card-title">Workflow Settings - <small>Manage Workflow Process</small></h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
+			  <div style="padding: 20px">
+				  <div class="" style="background-color: #c8dbfa !important; border-radius: 5px !important; padding: 10px">
+					Specify the administrators you want to handle a review of the payment schedule and the permissions assigned to the administrators. The administrators should be specified in the order in which 
+					you want them to review the payment schedule. Only administrators selected can review the payment schedule
+				  </div>
+			  </div>
               <form id="quickForm">
-                <div class="card-body">
+                <div class="card-body" id="roleHolder">
                   <div class="form-group">
-                    <label for="firstName">First Name</label>
-                    <input type="text" name="firstName" class="form-control ut" id="firstName" placeholder="Enter Administrators First Name">
+                    <label for="userType">Select An administrator</label>
+					<div style="clear: both !important">
+						<a  class="btn btn-primary float-left" onclick="handleAddNewAdministrator()"><i class="fa fa-plus"></i></a>
+						<select onchange="(this)" name="workflowuser[]" class="ut form-control float-left select1" style="width: auto !important" required placeholder="Enter Name of your User Type">
+							<option value=-1>--Select An Administrator--</option>
+							@foreach($userList as $ul)
+							<option value="{{$ul->user->id}}">{{$ul->user->firstName}} {{$ul->user->lastName}} - ({{$ul->userType}})</option>
+							@endforeach
+						</select>
+						  
+						  <div class="float-left" style="padding: 20px">
+							&nbsp;
+						  </div>
+
+						<div class="form-group clearfix">
+						  <div class="icheck-primary d-inline">
+							<input type="checkbox" id="" name="approve[]" class="approveClass">
+							<label for="">
+							</label>
+						  </div>
+						  <div class="icheck-primary d-inline" style="padding-left: 10px !important">
+							<label for="">
+							  Approve Permission
+							</label>
+						  </div>
+						  
+						  <div class="icheck-primary d-inline" style="padding-left: 20px !important">
+							<input type="checkbox" id="" name="disapprove[]" class="disapproveClass">
+							<label for="">
+							</label>
+						  </div>
+
+						  <div class="icheck-primary d-inline" style="padding-left: 10px !important">
+							<label for="">
+							  Dispprove Permission
+							</label>
+						  </div>
+						</div>
+					
+					</div>
+                    
                   </div>
-                  <div class="form-group">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" name="lastName" class="form-control ut" id="lastName" placeholder="Enter Administrators Last Name">
-                  </div>
-                  <div class="form-group">
-                    <label for="otherName">Other Name</label>
-                    <input type="text" name="otherName" class="form-control ut" id="otherName" placeholder="Enter Administrators Other Name">
-                  </div>
-                  <div class="form-group">
-                    <label for="dateOfBirth">Date of Birth</label>
-                    <input type="date" name="dateOfBirth" class="form-control ut" id="dateOfBirth" placeholder="Enter Date of Birth">
-                  </div>
-                  <div class="form-group">
-                    <label for="mobileNumber">Mobile Number</label>
-                    <input type="text" name="mobileNumber" class="form-control ut" id="mobileNumber" placeholder="Enter Administrators Mobile Number">
-                  </div>
-                  <div class="form-group">
-                    <label for="emailAddress">Email Address</label>
-                    <input type="text" name="emailAddress" class="form-control ut" id="emailAddress" placeholder="Enter Administrators Email Address">
-                  </div>
-                  <div class="form-group">
-                    <label for="gender">Gender</label>
-                    <select name="gender" class="form-control ut" id="gender" placeholder="Enter Name of your User Type">
-						<option value="FEMALE">Female</option>
-						<option value="Male">Male</option>
-					</select>
-                  </div>
-                  <div class="form-group">
-                    <label for="userType">User Role</label>
-                    <select name="userType" class="form-control ut" required id="userType" placeholder="Enter Name of your User Type">
-						<option value>--Select A User Role---</option>
-						@foreach($userTypes as $userType)
-						<option value="{{$userType->id}}">{{$userType->userType}}</option>
-						@endforeach
-					</select>
-                  </div>
+				  
+				  
                   
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Proceed <i class="fa fa-arrow-right"></i></button>
+                  <a class="btn btn-primary" onclick="submitWorkflowSettings()">Proceed <i class="fa fa-arrow-right"></i></a>
                 </div>
               </form>
             </div>
@@ -306,6 +317,114 @@ $(document).ready(function() {
 });
 
 
+function submitWorkflowSettings()
+{
+	var approveCheckboxes = $(".approveClass");
+	var disapproveCheckboxes = $(".disapproveClass");
+	console.log(approveCheckboxes);
+	var check = true;
+	var errorMessage = null;
+	var workflowuserHolder = [];
+	var dataHolder = [];
+	$(".select1").each(function (index, element) {
+        // element == this
+        console.log(element.value);
+		if(check==true && element.value==-1)
+		{
+			check = false;
+			errorMessage = "Your workflow process should contain administrator members. You have not selected one member in the list";
+		}
+		if(check==true && workflowuserHolder.includes(element.value))
+		{
+			check = false;
+			errorMessage = "Your workflow process can not contain people appearing more than once in the process. Check your selection to ensure this is not happening";
+		}
+		if(check==true && approveCheckboxes[index].checked==false && disapproveCheckboxes[index].checked==false)
+		{
+			check = false;
+			errorMessage = "In your workflow process, every member must be assigned at least one permission. You have not assigned a permisison to at least one of the selected members";
+		}
+		
+		workflowuserHolder.push(element.value);
+		var dataEntry = {};
+		var dataPermission = [];
+		
+		if(approveCheckboxes[index].checked==true)
+			dataPermission.push("APPROVE_PAYMENT_SCHEDULE");
+		
+		if(disapproveCheckboxes[index].checked==true)
+			dataPermission.push("DISAPPROVE_PAYMENT_SCHEDULE");
+		
+		if(approveFarmCheckboxes[index].checked==true)
+			dataPermission.push("APPROVE_FARM");
+		
+		if(disapproveFarmCheckboxes[index].checked==true)
+			dataPermission.push("DISAPPROVE_FARM");
+		
+		
+		dataEntry.userId = element.value;
+		dataEntry.permission = dataPermission;
+		dataEntry.level = (index+1);
+		
+		dataHolder.push(dataEntry);
+		console.log("====================>>>");
+		//console.log(dataHolder);
+    });
+	
+	if(workflowuserHolder.length==1)
+	{
+		errorMessage = "Your workflow process must contain at least two people";
+	}
+	
+	if(errorMessage!=null)
+		toastr.error(errorMessage);
+	else
+		sendDataToCreateWorkflow(dataHolder);
+	
+	
+}
+
+
+function sendDataToCreateWorkflow(dataHolder)
+{
+	var dataToSend = {};
+	dataToSend['data'] = dataHolder;
+	dataToSend['_token'] = "{{ csrf_token() }}";
+	console.log(dataToSend);
+	
+	$.ajax({
+	  type: "POST",
+	  url: "/create-new-workflow-api",
+	  data: dataToSend,
+	  dataType: "json",
+	  encode: true,
+	}).done(function (data) {
+		console.log(data);
+		if(data['status']==0)
+		{
+			$('#quickForm')[0].reset();
+			toastr.success(data['message']);
+			setTimeout(
+				function() 
+				{
+					window.location.href = "/administrator/workflow/view-users";
+				}, 5000
+			);
+		}
+		else
+		{
+			toastr.error(data['message']);
+		  
+		}
+	  
+	});
+
+	
+	event.preventDefault();
+}
+
+
+
 $(function () {
 	
 	
@@ -364,78 +483,70 @@ $(function () {
 		event.preventDefault();
     }
   });
-  $('#quickForm').validate({
-    rules: {
-      firstName: {
-        required: true,
-        minlength: 2
-      },
-      lastName: {
-        required: true,
-        minlength: 2
-      },
-      dateOfBirth: {
-        required: true,
-		//date: true
-      },
-      mobileNumber: {
-        required: true,
-        minlength: 10,
-		digits: true
-      },
-      emailAddress: {
-        required: true,
-        email: true,
-      },
-      gender: {
-        required: true,
-      },
-      userType: {
-        required: true,
-      },
-    },
-    messages: {
-      firstName: {
-        required: "Please enter the first name",
-        minlength: "Please provide the first name"
-      },
-      lastName: {
-        required: "Please provide the last name",
-        minlength: "Please provide the last name"
-      },
-      dateOfBirth: {
-        required: "Please enter the date of birth",
-        date: "Date of birth must be in a date format"
-      },
-      mobileNumber: {
-        required: "Please provide the mobile number",
-        minlength: "Please provide the mobile number",
-        digits: "Please provide the valid mobile number"
-      },
-      emailAddress: {
-        required: "Please enter the administrators email address",
-        email: "Please provide a valid email address"
-      },
-      gender: {
-        required: "Please specify the administrators gender",
-      },
-      userType: {
-        required: "Please specify the role of this administrator"
-      },
-    },
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-      error.addClass('invalid-feedback');
-      element.closest('.form-group').append(error);
-    },
-    highlight: function (element, errorClass, validClass) {
-      $(element).addClass('is-invalid');
-    },
-    unhighlight: function (element, errorClass, validClass) {
-      $(element).removeClass('is-invalid');
-    }
-  });
+  
 });
+
+
+
+function handleAddNewAdministrator()
+{
+	//alert(33);
+	
+	var $div = $("<div>", {"class": "form-group"});
+	var $select = $("<select>", {"onchange": "(this)", "name": "workflowuser[]", "class": "ut form-control float-left select1", "style": "width: auto !important", "required": true, "placeholder":"Enter Name of your User Type"});
+	$select.append($("<option>", {"value": -1, "text": ("--Select An Administrator--")}));
+	@foreach($userList as $ul)
+		$select.append($("<option>", {"value": {{$ul->user->id}}, "text": ("{{$ul->user->firstName}} {{$ul->user->lastName}} - ({{$ul->userType}})")}));
+	@endforeach
+	var $a = $("<a>", {"class": "btn btn-primary float-left", "onclick": "handleAddNewAdministrator()"});
+	var $i = $("<i>", {"class": "fa fa-plus"});
+	var etc = '<div class="float-left" style="padding: 20px">&nbsp;</div>';
+	etc = etc + '<div class="form-group clearfix">';
+	  etc = etc + '<div class="icheck-primary d-inline">';
+		etc = etc + '<input type="checkbox" id="" name="approve[]" class="approveClass">';
+		etc = etc + '<label for="">';
+		etc = etc + '</label>';
+	  etc = etc + '</div>';
+	  etc = etc + '<div class="icheck-primary d-inline" style="padding-left: 10px !important">';
+		etc = etc + '<label for="">';
+		  etc = etc + 'Approve Permission';
+		etc = etc + '</label>';
+	  etc = etc + '</div>';
+	  
+	  etc = etc + '<div class="icheck-primary d-inline" style="padding-left: 20px !important">';
+		etc = etc + '<input type="checkbox" id="" name="disapprove[]" class="disapproveClass">';
+		etc = etc + '<label for="">';
+		etc = etc + '</label>';
+	  etc = etc + '</div>';
+
+	  etc = etc + '<div class="icheck-primary d-inline" style="padding-left: 10px !important">';
+		etc = etc + '<label for="">';
+		  etc = etc + 'Dispprove Permission';
+		etc = etc + '</label>';
+	  etc = etc + '</div>';
+	etc = etc + '</div>';
+					
+	$a.append($i);
+	$div.append($a);
+	$div.append($select);
+	$div.append(etc);
+	var roleHolder = $('#roleHolder').append($div);
+	//console.log($('#roleHolder').html());
+	
+	/*<div class="form-group">
+		<label for="userType">Select A User Role</label>
+		<div style="clear: both !important">
+			<select name="userType" class="ut form-control float-left" style="width: auto !important" required id="userType" placeholder="Enter Name of your User Type">
+				<option value>--Select An Administrator---</option>
+				@foreach($userList as $ul)
+				<option value="{{$ul->user->id}}">{{$ul->user->firstName}} {{$ul->user->lastName}}</option>
+				@endforeach
+			</select>
+			<a  class="btn btn-primary" onclick="handleAddNewAdministrator()"><i class="fa fa-plus"></i></a>
+		</div>
+		
+	  </div>*/
+}
 
 </script>
 </body>

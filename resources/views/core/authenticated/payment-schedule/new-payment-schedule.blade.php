@@ -153,7 +153,7 @@
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  @include('partials.navigation_bar_farmer')
+  @include('partials.navigation_bar_administrator')
   
   
   <!-- Content Wrapper. Contains page content -->
@@ -163,7 +163,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Add Admin User</h1>
+            <h1>Payment Schedules</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -180,61 +180,78 @@
       <div class="container-fluid">
         <div class="row">
           <!-- left column -->
-          <div class="col-md-6 col-lg-6 col-sm-12">
+          <div class="col-md-12 col-lg-12 col-sm-12">
             <!-- jquery validation -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">New Admin User - <small>Add a new Administrator</small></h3>
+                <h3 class="card-title">Payment Schedules - <small>Create A Payment Schedule</small></h3>
               </div>
               <!-- /.card-header -->
-              <!-- form start -->
+              <!-- form start 
+			  <div style="padding: 20px">
+				  <div class="" style="background-color: #c8dbfa !important; border-radius: 5px !important; padding: 10px">
+					Specify the administrators you want to handle a review of the payment schedule and the permissions assigned to the administrators. The administrators should be specified in the order in which 
+					you want them to review the payment schedule. Only administrators selected can review the payment schedule
+				  </div>
+			  </div>-->
               <form id="quickForm">
-                <div class="card-body">
+                <div class="card-body" id="roleHolder">
                   <div class="form-group">
-                    <label for="firstName">First Name</label>
-                    <input type="text" name="firstName" class="form-control ut" id="firstName" placeholder="Enter Administrators First Name">
+                    <label for="userType">Specify the Year and Month of this payment </label>
+					<div style="clear: both !important">
+						<select onchange="handleMonths(this)" name="year" id="year" class="ut form-control float-left selectYear" style="width: auto !important" required placeholder="Enter Name of your User Type">
+							<option value>--Select Year--</option>
+							@for($x=date('Y'); $x<(date('Y') + 2); $x++)
+							<option value="{{$x}}">{{$x}}</option>
+							@endfor
+						</select>
+						  
+						  <div class="float-left" style="padding: 5px">
+							&nbsp;
+						  </div>
+
+						<div class="form-group clearfix">
+							<select onchange="(this)" name="month" id="month" class="ut form-control float-left selectMonth" style="width: auto !important" required placeholder="Enter Name of your User Type">
+								<option value=-1>--Select Month--</option>
+								@foreach($monthList as $key => $val)
+								<option value="{{$key}}">{{$val}}</option>
+								@endforeach
+							</select>
+						</div>
+					
+					</div>
+                    
                   </div>
-                  <div class="form-group">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" name="lastName" class="form-control ut" id="lastName" placeholder="Enter Administrators Last Name">
+				  
+				  <div class="form-group" id="amtClassFarms">
+                    <label for="userType">Specify the amount per farm and the farm classification </label>
+					<div style="clear: both !important">
+						<a  class="btn btn-primary float-left" onclick="handleAddNewAmountAndFarm()"><i class="fa fa-plus"></i></a>
+						<input type="number" name="amount[]" class="ut form-control float-left amount" style="width: auto !important" required placeholder="Enter Amount">
+						  
+						  <div class="float-left" style="padding: 5px">
+							&nbsp;
+						  </div>
+
+						<div class="form-group clearfix">
+							<select onchange="" name="classification[]" id="classification[]" class="ut form-control float-left classification" style="width: auto !important" required>
+								<option value=-1>--Select Farm Classification--</option>
+								@foreach($farmGroupList as $farmGroup)
+								<option value="{{$farmGroup->id}}">{{$farmGroup->farmGroupName}}</option>
+								@endforeach
+							</select>
+						</div>
+					
+					</div>
+                    
                   </div>
-                  <div class="form-group">
-                    <label for="otherName">Other Name</label>
-                    <input type="text" name="otherName" class="form-control ut" id="otherName" placeholder="Enter Administrators Other Name">
-                  </div>
-                  <div class="form-group">
-                    <label for="dateOfBirth">Date of Birth</label>
-                    <input type="date" name="dateOfBirth" class="form-control ut" id="dateOfBirth" placeholder="Enter Date of Birth">
-                  </div>
-                  <div class="form-group">
-                    <label for="mobileNumber">Mobile Number</label>
-                    <input type="text" name="mobileNumber" class="form-control ut" id="mobileNumber" placeholder="Enter Administrators Mobile Number">
-                  </div>
-                  <div class="form-group">
-                    <label for="emailAddress">Email Address</label>
-                    <input type="text" name="emailAddress" class="form-control ut" id="emailAddress" placeholder="Enter Administrators Email Address">
-                  </div>
-                  <div class="form-group">
-                    <label for="gender">Gender</label>
-                    <select name="gender" class="form-control ut" id="gender" placeholder="Enter Name of your User Type">
-						<option value="FEMALE">Female</option>
-						<option value="Male">Male</option>
-					</select>
-                  </div>
-                  <div class="form-group">
-                    <label for="userType">User Role</label>
-                    <select name="userType" class="form-control ut" required id="userType" placeholder="Enter Name of your User Type">
-						<option value>--Select A User Role---</option>
-						@foreach($userTypes as $userType)
-						<option value="{{$userType->id}}">{{$userType->userType}}</option>
-						@endforeach
-					</select>
-                  </div>
+				  
+				  
                   
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Proceed <i class="fa fa-arrow-right"></i></button>
+                  <a class="btn btn-primary" onclick="createSchedule()">Create Schedule <i class="fa fa-arrow-right"></i></a>
                 </div>
               </form>
             </div>
@@ -306,6 +323,127 @@ $(document).ready(function() {
 });
 
 
+
+function handleMonths()
+{
+	var currentYear = new Date().getFullYear();
+	var currentMonth = new Date().getMonth();
+	var monthSelected = $('#month').val();
+	var yearSelected = $('#year').val();
+	var months = [];
+	@foreach($monthList as $key => $val)
+		months.push('{{$val}}');
+	@endforeach
+	var tempMonths = months;
+	if(yearSelected==currentYear && currentMonth<11)
+	{
+		tempMonths = [];
+		for(var i=currentMonth+1; i<months.length; i++)
+		{
+			tempMonths.push(months[i]);
+		}
+	}
+	
+	$('#month')
+    .find('option')
+    .remove()
+    .end();
+	
+	var o = new Option("--Select Month--", null);
+	$("#month").append(o);
+	for(var i=0; i<tempMonths.length; i++)
+	{
+		var o = new Option(tempMonths[i], tempMonths[i]);
+		$("#month").append(o);
+	}
+}
+
+function createSchedule()
+{
+	var amounts = $(".amount");
+	var classifications = $(".classification");
+	console.log(amounts);
+	console.log(classifications);
+	var check = true;
+	var errorMessage = null;
+	var scheduleBreakdownHolder = [];
+	var dataHolder = [];
+	for(var i=0; i<amounts.length; i++)
+	{
+		var amtValue = amounts[i].value;
+		var classificationValue = classifications[i].value;
+		console.log(amtValue);
+		if(amtValue.length>0 && amtValue>0)
+		{
+			
+		}
+		else
+		{
+			check = false;
+			errorMessage = "Invalid amount found in the fields specifying how much is to be paid";
+		}
+		
+		if(classificationValue.length>0 && classificationValue>-1)
+		{
+			
+		}
+		else
+		{
+			check = false;
+			errorMessage = "Invalid classification found in the fields specifying the classification of farms to be paid";
+		}
+		
+		var dataEntry = {};
+		dataEntry.amountToPay = amtValue;
+		dataEntry.farmGroupId = classificationValue;
+		
+		dataHolder.push(dataEntry);
+	}
+	sendDataToCreatePaymentSchedule(dataHolder, $('#year').val(), $('#month').val());
+	
+	
+}
+
+
+function sendDataToCreatePaymentSchedule(dataHolder, year, month)
+{
+	var dataToSend = {amountClassification: dataHolder, year: year, month: month};
+	dataToSend['_token'] = "{{ csrf_token() }}";
+	console.log(dataToSend);
+	
+	$.ajax({
+	  type: "POST",
+	  url: "/create-new-payment-schedule-api",
+	  data: dataToSend,
+	  dataType: "json",
+	  encode: true,
+	}).done(function (data) {
+		console.log(data);
+		if(data['status']==0)
+		{
+			$('#quickForm')[0].reset();
+			toastr.success(data['message']);
+			setTimeout(
+				function() 
+				{
+					window.location.href = "/administrator/payment-schedule/payment-schedules";
+				}, 5000
+			);
+		}
+		else
+		{
+			toastr.error(data['message']);
+		  
+		}
+	  
+	});
+
+	
+	event.preventDefault();
+}
+
+
+
 $(function () {
 	
 	
@@ -364,78 +502,35 @@ $(function () {
 		event.preventDefault();
     }
   });
-  $('#quickForm').validate({
-    rules: {
-      firstName: {
-        required: true,
-        minlength: 2
-      },
-      lastName: {
-        required: true,
-        minlength: 2
-      },
-      dateOfBirth: {
-        required: true,
-		//date: true
-      },
-      mobileNumber: {
-        required: true,
-        minlength: 10,
-		digits: true
-      },
-      emailAddress: {
-        required: true,
-        email: true,
-      },
-      gender: {
-        required: true,
-      },
-      userType: {
-        required: true,
-      },
-    },
-    messages: {
-      firstName: {
-        required: "Please enter the first name",
-        minlength: "Please provide the first name"
-      },
-      lastName: {
-        required: "Please provide the last name",
-        minlength: "Please provide the last name"
-      },
-      dateOfBirth: {
-        required: "Please enter the date of birth",
-        date: "Date of birth must be in a date format"
-      },
-      mobileNumber: {
-        required: "Please provide the mobile number",
-        minlength: "Please provide the mobile number",
-        digits: "Please provide the valid mobile number"
-      },
-      emailAddress: {
-        required: "Please enter the administrators email address",
-        email: "Please provide a valid email address"
-      },
-      gender: {
-        required: "Please specify the administrators gender",
-      },
-      userType: {
-        required: "Please specify the role of this administrator"
-      },
-    },
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-      error.addClass('invalid-feedback');
-      element.closest('.form-group').append(error);
-    },
-    highlight: function (element, errorClass, validClass) {
-      $(element).addClass('is-invalid');
-    },
-    unhighlight: function (element, errorClass, validClass) {
-      $(element).removeClass('is-invalid');
-    }
-  });
+  
 });
+
+
+function handleAddNewAmountAndFarm()
+{
+	var $div = $("<div>", {"style": "both !important"});
+	var $a = $("<a>", {"onclick": "handleAddNewAmountAndFarm()", "class": "btn btn-primary float-left"});
+	var $i = $("<i>", {"class": "fa fa-plus"});
+	$a.append($i);
+	var $input = $("<input>", {"type": "number", "name": "amount[]", "class": "ut form-control float-left amount", "style": "width: auto !important", "required": true, "placeholder":"Enter Amount"});
+	var $div1 = $("<div>", {"style": "padding: 5px", "class": "float-left"});
+	$div1.html("&nbsp;");
+	
+	var $div2 = $("<div>", {"class": "form-group clearfix"});
+	var $select = $("<select>", {"onchange": "", "name": "classification[]", "class": "ut form-control float-left classification", "style": "width: auto !important", "required": true});
+	$select.append($("<option>", {"value": -1, "text": ("--Select Farm Classification--")}));
+	@foreach($farmGroupList as $farmGroup)
+		$select.append($("<option>", {"value": {{$farmGroup->id}}, "text": "{{$farmGroup->farmGroupName}}"}));
+	@endforeach
+	$div2.append($select);
+	
+	$div.append($a);
+	$div.append($input);
+	$div.append($div1);
+	$div.append($div2);
+	$('#amtClassFarms').append($div);
+	
+}
 
 </script>
 </body>

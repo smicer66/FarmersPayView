@@ -3,12 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Validation Form</title>
+  <title>AdminLTE 3 | DataTables</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
 </head>
@@ -153,7 +157,7 @@
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  @include('partials.navigation_bar_farmer')
+  @include('partials.navigation_bar_administrator')
   
   
   <!-- Content Wrapper. Contains page content -->
@@ -163,12 +167,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Add Admin User</h1>
+            <h1>All Workflow Members</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Validation</li>
+              <li class="breadcrumb-item active">DataTables</li>
             </ol>
           </div>
         </div>
@@ -179,76 +183,47 @@
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-          <!-- left column -->
-          <div class="col-md-6 col-lg-6 col-sm-12">
-            <!-- jquery validation -->
-            <div class="card card-primary">
+          <div class="col-12">
+
+            <div class="card">
               <div class="card-header">
-                <h3 class="card-title">New Admin User - <small>Add a new Administrator</small></h3>
+                <div class="float-left"><h3 class="card-title">All Workflow Members</h3></div>
+				<div class="float-right"><a href="/administrator/workflow/settings" class="btn btn-primary">Create Workflow Members</a></div>
               </div>
               <!-- /.card-header -->
-              <!-- form start -->
-              <form id="quickForm">
-                <div class="card-body">
-                  <div class="form-group">
-                    <label for="firstName">First Name</label>
-                    <input type="text" name="firstName" class="form-control ut" id="firstName" placeholder="Enter Administrators First Name">
-                  </div>
-                  <div class="form-group">
-                    <label for="lastName">Last Name</label>
-                    <input type="text" name="lastName" class="form-control ut" id="lastName" placeholder="Enter Administrators Last Name">
-                  </div>
-                  <div class="form-group">
-                    <label for="otherName">Other Name</label>
-                    <input type="text" name="otherName" class="form-control ut" id="otherName" placeholder="Enter Administrators Other Name">
-                  </div>
-                  <div class="form-group">
-                    <label for="dateOfBirth">Date of Birth</label>
-                    <input type="date" name="dateOfBirth" class="form-control ut" id="dateOfBirth" placeholder="Enter Date of Birth">
-                  </div>
-                  <div class="form-group">
-                    <label for="mobileNumber">Mobile Number</label>
-                    <input type="text" name="mobileNumber" class="form-control ut" id="mobileNumber" placeholder="Enter Administrators Mobile Number">
-                  </div>
-                  <div class="form-group">
-                    <label for="emailAddress">Email Address</label>
-                    <input type="text" name="emailAddress" class="form-control ut" id="emailAddress" placeholder="Enter Administrators Email Address">
-                  </div>
-                  <div class="form-group">
-                    <label for="gender">Gender</label>
-                    <select name="gender" class="form-control ut" id="gender" placeholder="Enter Name of your User Type">
-						<option value="FEMALE">Female</option>
-						<option value="Male">Male</option>
-					</select>
-                  </div>
-                  <div class="form-group">
-                    <label for="userType">User Role</label>
-                    <select name="userType" class="form-control ut" required id="userType" placeholder="Enter Name of your User Type">
-						<option value>--Select A User Role---</option>
-						@foreach($userTypes as $userType)
-						<option value="{{$userType->id}}">{{$userType->userType}}</option>
-						@endforeach
-					</select>
-                  </div>
-                  
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Proceed <i class="fa fa-arrow-right"></i></button>
-                </div>
-              </form>
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th>Full Name</th>
+                    <th>Position</th>
+                    <th>User Role</th>
+                    <th>Permission</th>
+                    <th>Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                  <tfoot>
+                  <tr>
+                    <th>Full Name</th>
+                    <th>Position</th>
+                    <th>User Role</th>
+                    <th>Permission</th>
+                    <th>Action</th>
+                  </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- /.card-body -->
             </div>
             <!-- /.card -->
-            </div>
-          <!--/.col (left) -->
-          <!-- right column -->
-          <div class="col-md-6">
-
           </div>
-          <!--/.col (right) -->
+          <!-- /.col -->
         </div>
         <!-- /.row -->
-      </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
   </div>
@@ -272,171 +247,92 @@
 <script src="../../plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- jquery-validation -->
-<script src="../../plugins/jquery-validation/jquery.validate.min.js"></script>
-<script src="../../plugins/jquery-validation/additional-methods.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="../../plugins/jszip/jszip.min.js"></script>
+<script src="../../plugins/pdfmake/pdfmake.min.js"></script>
+<script src="../../plugins/pdfmake/vfs_fonts.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="../../dist/js/demo.js"></script>
-
-<!-- Tastr dependencies -->
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <!-- Page specific script -->
 <script>
-
-$(document).ready(function() {
-	toastr.options = {
-		'closeButton': true,
-		'debug': false,
-		'newestOnTop': false,
-		'progressBar': false,
-		'positionClass': 'toast-top-right',
-		'preventDuplicates': false,
-		'showDuration': '1000',
-		'hideDuration': '1000',
-		'timeOut': '5000',
-		'extendedTimeOut': '1000',
-		'showEasing': 'swing',
-		'hideEasing': 'linear',
-		'showMethod': 'fadeIn',
-		'hideMethod': 'fadeOut',
-	}
-});
-
-
-$(function () {
+  $(function () {
+	  
+	var url = '/list-workflow-users-api';
+    $("#example1").DataTable({
+		"ajax": {
+			dataType: "JSON",  
+			type: "GET",
+			url: url,
+			data: [],
+			dataSrc: function ( json ) {
+                //Make your callback here.
+				console.log(json);
+				var userStatusList = [];
+				userStatusList['NOT_ACTIVATED'] = 'Not Activated';
+				userStatusList['ACTIVE'] = 'Active';
+				userStatusList['SUSPENDED'] = 'Suspended';
+				userStatusList['DELETED'] = 'Deleted';
+				
+				var dt = json.data;
+				var dt1 = [];
+				$.each(dt, function(index, value) {
+					value.status = userStatusList[value.status];
+					//var date = new Date('yyyy-MM-dd', Date.parse(value.dateOfBirth));
+					var date = new Date(value.dateOfBirth);
+					//console.log(date);
+					value.dateOfBirth =  date.toDateString();
+					dt1.push(value);
+					//console.log(value);
+				});
+                return dt1;
+            },
+			async: true,
+			error: function (xhr, error, code) {
+				console.log(xhr.status, code);
+				if(xhr.status==401)
+				{
+					window.location.href = "/logout";
+				}
+			}
+		},
+		/*"beforeSend": function (xhr) {
+			xhr.setRequestHeader('Authorization',
+				"Bearer " + '{{\Auth::user()->token}}');
+		},*/
+		"responsive": true, 
+		"autoWidth": false,
+		"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+		"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+		"dom": '<"top"Bf>rt<"bottom"lip><"clear">',
+		"paging": true,
+		"lengthChange": true,
+		"searching": true,
+		"ordering": true,
+		"serverSide": true,
+		"processing": true,
+		"columns": [
+			{ data: 'userFullName' },
+			{ data: 'level' },
+			{ data: 'userRole' },
+			{ data: 'permissionList' },
+			{ data: 'link' }
+		],
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    
 	
 	
-	
-	
-	
-	
-  $.validator.setDefaults({
-    submitHandler: function () {
-		
-		console.log(new Date( $('#dateOfBirth').val()));
-		
-		
-		var formData = {
-		  firstName: $('#firstName').val(),
-		  lastName: $('#lastName').val(),
-		  otherName: $('#otherName').val(),
-		  mobileNumber: $('#mobileNumber').val(),
-		  emailAddress: $('#emailAddress').val(),
-		  dateOfBirth: $('#dateOfBirth').val(),
-		  gender: $('#gender').val(),
-		  userTypeId: $('#userType').val(),
-		  _token: "{{ csrf_token() }}",
-		};
-		
-		console.log(formData);
-		//alert(44);
-
-		$.ajax({
-		  type: "POST",
-		  url: "/add-admin-user-api",
-		  data: formData,
-		  dataType: "json",
-		  encode: true,
-		}).done(function (data) {
-		  if(data['responseCode']==0)
-		  {
-				$('#quickForm')[0].reset();
-				toastr.success(data['message']);
-				setTimeout(
-					function() 
-					{
-						window.location.href = "/administrator/user/all-users";
-					}, 5000
-				);
-		  }
-		  else
-		  {
-			  toastr.error(data['message']);
-			  
-		  }
-		  
-		});
-
-		
-		event.preventDefault();
-    }
   });
-  $('#quickForm').validate({
-    rules: {
-      firstName: {
-        required: true,
-        minlength: 2
-      },
-      lastName: {
-        required: true,
-        minlength: 2
-      },
-      dateOfBirth: {
-        required: true,
-		//date: true
-      },
-      mobileNumber: {
-        required: true,
-        minlength: 10,
-		digits: true
-      },
-      emailAddress: {
-        required: true,
-        email: true,
-      },
-      gender: {
-        required: true,
-      },
-      userType: {
-        required: true,
-      },
-    },
-    messages: {
-      firstName: {
-        required: "Please enter the first name",
-        minlength: "Please provide the first name"
-      },
-      lastName: {
-        required: "Please provide the last name",
-        minlength: "Please provide the last name"
-      },
-      dateOfBirth: {
-        required: "Please enter the date of birth",
-        date: "Date of birth must be in a date format"
-      },
-      mobileNumber: {
-        required: "Please provide the mobile number",
-        minlength: "Please provide the mobile number",
-        digits: "Please provide the valid mobile number"
-      },
-      emailAddress: {
-        required: "Please enter the administrators email address",
-        email: "Please provide a valid email address"
-      },
-      gender: {
-        required: "Please specify the administrators gender",
-      },
-      userType: {
-        required: "Please specify the role of this administrator"
-      },
-    },
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-      error.addClass('invalid-feedback');
-      element.closest('.form-group').append(error);
-    },
-    highlight: function (element, errorClass, validClass) {
-      $(element).addClass('is-invalid');
-    },
-    unhighlight: function (element, errorClass, validClass) {
-      $(element).removeClass('is-invalid');
-    }
-  });
-});
-
 </script>
 </body>
 </html>
